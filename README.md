@@ -1,6 +1,9 @@
 ﻿# zhihu_tools
 
 用法
+
+需要添加知乎cookie
+
 python3 ./answer_spider_.py -u 《url》#盐选会员回答保存为md格式，存在_post文件下
 
 python3 ./market.py -u 《url》#盐选专栏单个保存为md格式，存在post文件下
