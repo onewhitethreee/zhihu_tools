@@ -30,15 +30,5 @@ with open(r'./1.md','w+',encoding='utf-8') as f:
     firstline = f.readline().rstrip()
     with open(r'/www/bloghu/_posts/{}-{}.md'.format(now,title),'w+',encoding='utf-8') as fx:
             fx.seek(0)#在最开始写入
-            fx.write('---\n')#写入————
-            fx.write('title: '+title+'\n')#写入标题
-            fx.write('layour: ' + 'post'+'\n')#写入layour
-            fx.write('tags: ' + '杂志\n')#写入标签
-            fx.write('categories: ' 'zhihu\n')#写入分类
-            try:
-                fx.write('excerpt: ' +first_texts+ '\n')#写入卡片显示内容
-            except:
-                fx.write('excerpt: ' + '\n')
-            fx.write('---\n')#写入————
             replae = section.replace('\n','\r\r')#在text中查找换行符并直接替换为回车符
             fx.write(replae)
