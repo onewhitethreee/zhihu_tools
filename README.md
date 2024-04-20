@@ -1,22 +1,25 @@
 ﻿# zhihu_tools
 
-用法
+## 2024-04-20 代码重构
 
-需要添加知乎cookie
+### 目录树
 
-python3 ./answer_spider_.py -u 《url》#盐选会员回答保存为md格式，存在_post文件下
+```
+├─answerSpider 用来获取到知乎盐选文件带有question的链接
+│  └─__pycache__
+├─config 默认配置文件。内中含有读取配置信息的内容
+│  └─__pycache__
+├─fakeUserAgent 请求头内容。进行爬取的时候需要有手机请求头，不然无法请求成功
+│  └─__pycache__
+├─fontParse 用来解决知乎字体反扒的问题。具体准备实现的方式为OCR
+├─main
+│  └─__pycache__
+└─marketSpider 用来获取到知乎带有market链接的文章内容
+    └─__pycache__
 
-python3 ./market.py -u 《url》#盐选专栏单个保存为md格式，存在post文件下
+```
 
-python3 ./link_convert.py -u 《url》
 
-例子
+### 开发计划
 
-python3 ./answer_spider_.py -u https://www.zhihu.com/question/394297429/answer/2538669480
-
-python3 ./market.py -u https://www.zhihu.com/question/394297429/answer/2538669480
-
-python3 ./link_convert.py -u https://www.zhihu.com/answer/2538669480
-
-输出：https://www.zhihu.com/question/394297429/answer/2538669480
-
+    [x] fake请求头随机获取

@@ -9,13 +9,17 @@ class option:
         print("1. Question 链接")
         print("2. Market   链接")
         print("3.          退出")
+    
     # 获取命令行参数
     def getCommand(self) -> str:
+        # 返回命令行参数
         if len(sys.argv) == 2:
             return sys.argv[1]
+        # 如果命令行参数大于2, 则提示错误
         if (len(sys.argv) > 2):
             print("正确的命令行参数为: python3 main.py [链接]")
             return "None"
+    
     # 获取选项
     def getOption(self) -> None:
         while(1):
@@ -26,11 +30,16 @@ class option:
                 print("输入错误, 请重新输入")
 
     def main(self) -> str:
-
+        # 如果命令行参数为None, 则返回None
         if self.getCommand() == "None":
             return None
-
-        if(self.getCommand() == None):
+        
+        # 如果命令行参数不为None, 则返回命令行参数
+        if self.getCommand() != None:
+            self.type = self.getCommand()
+        
+        # 如果命令行参数为None, 则返回菜单选项
+        if self.getCommand() == None:
             self.menu()
             self.getOption()
         return self.type

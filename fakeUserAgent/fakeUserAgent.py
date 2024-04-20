@@ -23,5 +23,5 @@ class fakeUserAgent:
     def getRandomUserAgent(self) -> str:
 
         self.loadUserAgent()
-
         return self.user_agents[self.getRandomPlatform()][random.randint(0, len(self.user_agents[self.getRandomPlatform()]) - 1)]
+
