@@ -7,7 +7,7 @@ import re
 import base64
 import sys
 import os
-
+import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import fontPreview
 
@@ -15,11 +15,9 @@ import fontPreview
 class MarketSpider:
     def __init__(self, header) -> None:
         self.header = header
-        self.fontConfig = None
-
+        self.marketTitle = None
     # 保存为html文件。防止多次请求
     def getMarketHtml(self, url):
-
         response = requests.get(url, verify=False, headers=self.header)
         try:
             with open("market.html", "w", encoding="utf-8") as f:
@@ -27,13 +25,23 @@ class MarketSpider:
             print("写入成功")
         except Exception as e:
             print(e)
-
-    # 获取字体文件
+    def get_third_font_face(self, html):
+        font_face_blocks = re.findall(r"@font-face\s*{[^}]*}", html)
+        # 获取第三个 @font-face 规则块
+        if len(font_face_blocks) >= 3:
+            font_face_blocks = re.findall(r"@font-face\s*{[^}]*}", html)
+            font_url = re.search(r"src:\s*url\(([^)]+)\)", font_face_blocks[2]).group(1)
+            return font_url
+        else:
+            return ''
+    # 获取字体文件并且下载
     def getFontFile(self, htmlFile="market.html"):
         with open(htmlFile, "r", encoding="utf-8") as f:
             html = f.read()
-        fontFile = re.search(r"url\((.*?)\)", html).group(1)
-
+        fontFile = self.get_third_font_face(html)
+        if fontFile == '':
+            print("未匹配到字体文件！")
+            return
         parts = fontFile.split(",")
         if len(parts) != 2:
             print("无效的数据URL！")
@@ -60,11 +68,15 @@ class MarketSpider:
             return False
 
         content = etree.HTML(html)
-        content = content.xpath('//*[@id="manuscript"]/p/text()')
-        with open("content.txt", "w+", encoding="utf-8") as f:
-            for i in content:
-                f.write(i + "\n")
-        print("内容写入成功！")
+        content = content.xpath('string(//*[@id="resolved"])')
+        content = json.loads(content)
+        contents = content["appContext"]["__connectedAutoFetch"]["manuscript"]["data"][
+            "manuscriptData"
+        ]["pTagList"] # 获取内容
+        with open(self.marketTitle, "w", encoding="utf-8") as f:
+            for item in contents:
+                f.write(item + "\n")
+        print("内容获取成功！")
         return True
 
 
@@ -73,7 +85,7 @@ class MarketParse:
     def __init__(self):
         self.glyfDict = {}
 
-    def replace_text(self, text, replacement_dict):
+    def replace_text(self, text, replacement_dict): # 替换文本
         result = []
         for char in text:
             if char in replacement_dict:
@@ -82,7 +94,7 @@ class MarketParse:
                 result.append(char)
         return "".join(result)
 
-    def parse(self):
+    def parse(self): # 解析字体文件
         self.glyfDict = fontPreview.FontPreview().preview("font.woff", "images")
         with open("content.txt", "r", encoding="utf-8") as f:
             content = f.read()
@@ -93,7 +105,12 @@ class MarketParse:
             f.write(content)
 
 
-m = MarketParse()
-
-m.parse()
-print(m.glyfDict)
+m = MarketSpider(
+    {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+    }
+)
+m.getContent()
+m.getFontFile()
+p = MarketParse()
+p.parse()
