@@ -158,6 +158,8 @@ class FontPreview:
     def remove_files(self, path):
         if os.path.exists("font_preview.png"):
             os.remove("font_preview.png")
+        if os.path.exists('font.woff'):
+            os.remove('font.woff')
         shutil.rmtree(path)
 
     # 判断字典中是否有某个值为空，如果为空，填充一

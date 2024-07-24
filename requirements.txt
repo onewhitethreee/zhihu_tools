@@ -1,6 +1,7 @@
-easyocr==1.7.1
-fontTools==4.53.1
+fonttools==4.53.1
 lxml==5.2.2
+numpy==2.0.1
+onnxruntime==1.18.1
+opencv_python_headless==4.10.0.84
 Pillow==10.4.0
 Requests==2.32.3
-numpy==1.26.4
