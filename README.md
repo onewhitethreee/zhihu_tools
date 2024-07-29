@@ -81,7 +81,7 @@
 - 这是一个盐选文件获取的项目。不是无中生有破解知乎
 - 首先要有的就是一个盐选账号。
 
-  - 需要获取到账号的cookie复制到config.ini文件。然后运行main.py文件中的spider.py即可
+  - 需要获取到账号的cookie复制到config.ini文件。然后运行main文件中的spider.py即可
 - 知乎提示需升级版本
   - User-Agent 不是手机或者是无用的User-Agent
   - 如何获取一个User-Agent？
