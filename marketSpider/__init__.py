@@ -9,6 +9,7 @@ import sys
 import os
 import json
 import logging
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import fontPreview
 
@@ -18,8 +19,10 @@ class MarketSpider:
         self.header = header
         self.marketTitle = None
         self.glyfDict = {}
-    # 保存为html文件。防止多次请求
+        self.url = None  # 保存初始URL
+
     def getMarketHtml(self, url):
+        self.url = url  # 保存URL
         response = requests.get(url, verify=False, headers=self.header)
         try:
             with open("market.html", "w", encoding="utf-8") as f:
@@ -28,7 +31,17 @@ class MarketSpider:
         except Exception as e:
             logging.error("文章请求失败：", str(e))
 
-    # 获取字体文件并且下载
+    def re_fetch_article(self):
+        """
+        重新请求文章，更新HTML和字体文件
+        """
+        logging.info("重新请求文章...")
+        self.getMarketHtml(self.url)  # 重新下载HTML
+        self.getFontFile()  # 重新获取字体文件
+        self.getContent()
+
+        # 获取字体文件并且下载
+
     def getFontFile(self, htmlFile="market.html"):
         with open(htmlFile, "r", encoding="utf-8") as f:
             html = f.read()
@@ -77,11 +90,11 @@ class MarketSpider:
         content = json.loads(content)
         contents = content["appContext"]["__connectedAutoFetch"]["manuscript"]["data"][
             "manuscriptData"
-        ]["pTagList"] # 获取内容
-        
+        ]["pTagList"]  # 获取内容
+
         self.marketTitle = content["appContext"]["__connectedAutoFetch"]["manuscript"]["data"][
-            "manuscriptData"
-        ]["title"] + ".txt" # 获取标题
+                               "manuscriptData"
+                           ]["title"] + ".txt"  # 获取标题
         with open(self.marketTitle + ".temp", "w", encoding="utf-8") as f:
             for item in contents:
                 f.write(item + "\n")
@@ -89,7 +102,7 @@ class MarketSpider:
         return True
 
     # 替换正文中的文字
-    def replace_text(self, text, replacement_dict): 
+    def replace_text(self, text, replacement_dict):
         result = []
         for char in text:
             if char in replacement_dict:
@@ -97,20 +110,23 @@ class MarketSpider:
             else:
                 result.append(char)
         return "".join(result)
+
     # 解析字体文件
     def parse(self):
-        self.glyfDict = fontPreview.FontPreview().preview("font.woff", "images")
-        with open(self.marketTitle+".temp", "r", encoding="utf-8") as f:
+        font_preview = fontPreview.FontPreview()
+        font_preview.set_market_spider(self)  # 关联MarketSpider实例
+        self.glyfDict = font_preview.preview("font.woff", "images")
+        logging.info(f"字体映射表: {self.glyfDict}")  # 打印映射表以验证
+        with open(self.marketTitle + ".temp", "r", encoding="utf-8") as f:
             content = f.read()
-
         content = self.replace_text(content, self.glyfDict)
-
         with open(self.marketTitle, "w", encoding="utf-8") as f:
             f.write(content)
         logging.info("文章解析成功！")
+
     def spider(self, url):
         self.getMarketHtml(url)
         self.getFontFile()
         if self.getContent():
             self.parse()
-        # os.remove('font.woff')
+
