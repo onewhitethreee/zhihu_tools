@@ -9,7 +9,7 @@ class fakeUserAgent:
 
     # 从json文件中读取user-agent
     def loadUserAgent(self):
-        with open("fakeUserAgent/user_agents.json", "r") as f:
+        with open("../fakeUserAgent/user_agents.json", "r") as f:
             user_agents = json.load(f)
             logging.info("加载user-agent成功")
             logging.info("--------------------------")
