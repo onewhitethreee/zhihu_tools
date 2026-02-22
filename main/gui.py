@@ -2,6 +2,14 @@ import threading
 import tkinter as tk
 from tkinter import ttk, scrolledtext, messagebox
 import webbrowser
+import os
+import sys
+
+# Ensure sibling top-level modules are importable when running this file directly
+_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+_REPO_ROOT = os.path.dirname(_CURRENT_DIR)
+if _REPO_ROOT not in sys.path:
+    sys.path.append(_REPO_ROOT)
 import marketSpider
 from spider import zhihuSpider
 
