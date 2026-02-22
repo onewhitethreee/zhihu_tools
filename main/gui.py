@@ -149,7 +149,7 @@ class ZhihuSpiderGUI:
 
     def do_crawl(self, link):
         try:
-            market = marketSpider.MarketSpider(self.spider._zhihuSpider__header)
+            market = marketSpider.MarketSpider(self.spider.get_header())
             market.spider(link)
             # 在主线程中更新日志
             self.master.after(0, lambda: self.log("爬取完成！文件已保存。"))
