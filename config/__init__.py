@@ -4,7 +4,7 @@ import configparser
 class Config:
     def __init__(self) -> None:
         self.config = configparser.ConfigParser()
-        self.config.read("../config.ini")
+        self.config.read("config.ini")
 
     # 获取config.ini配置文件
     def get(self, section, key) -> str:
