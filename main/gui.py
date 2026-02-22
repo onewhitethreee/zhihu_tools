@@ -125,7 +125,8 @@ class ZhihuSpiderGUI:
             messagebox.showwarning("提示", f"选项 {option} 暂未实现，敬请期待！\n\nGitHub: https://github.com/onewhitethreee/zhihu_tools")
             return
 
-        if not link:
+        # Treat placeholder text as empty input so it cannot be crawled
+        if (not link) or (hasattr(self, "placeholder_text") and link == self.placeholder_text):
             messagebox.showerror("错误", "请输入目标链接！")
             return
 
