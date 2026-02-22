@@ -151,11 +151,15 @@ class ZhihuSpiderGUI:
         try:
             market = marketSpider.MarketSpider(self.spider._zhihuSpider__header)
             market.spider(link)
-            self.log("爬取完成！文件已保存。")
+            # 在主线程中更新日志
+            self.master.after(0, lambda: self.log("爬取完成！文件已保存。"))
         except Exception as e:
-            self.log(f"爬取失败：{str(e)}")
+            # 在主线程中更新错误日志
+            msg = f"爬取失败：{str(e)}"
+            self.master.after(0, lambda m=msg: self.log(m))
         finally:
-            self.status_var.set("就绪")
+            # 在主线程中更新状态
+            self.master.after(0, lambda: self.status_var.set("就绪"))
 
 if __name__ == "__main__":
     root = tk.Tk()
