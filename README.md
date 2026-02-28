@@ -8,6 +8,10 @@ ZhiHu Tools 是一个专为获取知乎盐选文章而设计的工具。自2022-
 
 ## 最新更新
 
+### 2026年2月28日
+
+- 感谢 [@douzi2023](https://github.com/douzi2023) 贡献的PR，添加了GUI方面的内容
+
 ### 2025年3月8日
 - 感谢 [@Xmug](https://github.com/Xmug) 贡献的PR，修复了多个bug
 
@@ -108,5 +112,6 @@ https://www.zhihu.com/market/paid_column/1702723501155422208/section/17889206081
 # 如果您有特定的需求，请带上您的报价+要求发送到邮箱twaapot@gmail.com
 
 # 我会在看到后进行回复
+
 
 
